@@ -10,15 +10,24 @@ android {
         applicationId 'pl.iptvplayer.app'
         minSdk 21
         targetSdk 35
-        versionCode 1
-        versionName '1.0'
+        versionCode 2
+        versionName '2.0'
+    }
+
+    // stały klucz podpisu – kolejne wersje APK instalują się jako aktualizacja (bez odinstalowywania)
+    signingConfigs {
+        release {
+            storeFile file('iptv-release.jks')
+            storePassword 'iptvplayer'
+            keyAlias 'iptv'
+            keyPassword 'iptvplayer'
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            // podpis kluczem debug – wystarczy do instalacji z pliku APK na własnych urządzeniach
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 
@@ -31,4 +40,11 @@ android {
         abortOnError false
         checkReleaseBuilds false
     }
+}
+
+dependencies {
+    // sprzętowy odtwarzacz wideo (ten sam silnik co w TiviMate i aplikacjach Google)
+    implementation 'androidx.media3:media3-exoplayer:1.4.1'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.4.1'
+    implementation 'androidx.media3:media3-ui:1.4.1'
 }

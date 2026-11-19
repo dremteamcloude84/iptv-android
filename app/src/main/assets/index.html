@@ -404,6 +404,19 @@
 </style>
 </head>
 <body>
+<style>
+  /* --- dodatki v3: wybór języka, tryb sprzętowego odtwarzacza (Android) --- */
+  html.native, html.native body { background: transparent !important; }
+  html.native video { display: none !important; }
+  .langs { display: flex; gap: 12px; margin-left: 30px; }
+  .lang { font-size: 24px; padding: 12px 20px; border-radius: 12px; border: 2px solid rgba(152,186,227,.29);
+          background: rgba(16,28,49,.85); color: #dbe6f5; font-weight: 700; }
+  .lang.on { border-color: #65e6f5; color: #fff; background: linear-gradient(130deg,#2a4f7d,#2c3577); }
+  .home-top .langs + .clock { margin-left: 30px; }
+  .home-top .clock { margin-left: auto; }
+  .ch .num { min-width: 92px; width: auto; padding-right: 14px; }
+  input.editing { border-color: #ffdc78 !important; box-shadow: 0 0 0 6px rgba(255,220,120,.25) !important; }
+</style>
 
 <video id="video" autoplay playsinline></video>
 <div id="loading" class="hidden"></div>
@@ -427,23 +440,23 @@
 <!-- lista kanałów -->
 <div id="playlist" class="hidden">
   <div class="pl-head">
-    <div class="pill" id="groupPill"><span class="ico">☰</span><span id="groupName">Wszystkie</span></div>
+    <div class="pill" id="groupPill"><span class="ico">☰</span><span id="groupName"></span></div>
     <span class="clock" id="plClock"></span>
   </div>
   <div id="list"></div>
   <div class="keybar">
-    <span class="k k-info" data-act="info"><i></i>Info</span>
-    <span class="k k-red" data-act="fav"><i></i>Ulubione</span>
-    <span class="k k-green" data-act="epg"><i></i>Program TV</span>
-    <span class="k k-yellow" data-act="az"><i></i><span id="azLabel">A–Z</span></span>
-    <span class="k k-blue" data-act="groups"><i></i>Grupy</span>
-    <span class="k" style="margin-left:auto;color:#8b949e">Przytrzymaj OK: menu</span>
+    <span class="k k-info" data-act="info"><i></i><span data-t="Info"></span></span>
+    <span class="k k-red" data-act="fav"><i></i><span data-t="Ulubione"></span></span>
+    <span class="k k-green" data-act="epg"><i></i><span data-t="Program TV"></span></span>
+    <span class="k k-yellow" data-act="az"><i></i><span id="azLabel"></span></span>
+    <span class="k k-blue" data-act="groups"><i></i><span data-t="Grupy"></span></span>
+    <span class="k" style="margin-left:auto;color:#8b949e" data-t="◀ Grupy · ▶ Program · Przytrzymaj OK: menu"></span>
   </div>
 </div>
 
 <!-- grupy -->
 <div id="groups" class="side hidden">
-  <div class="side-head">☰ Grupy kanałów</div>
+  <div class="side-head" data-t="☰ Grupy kanałów"></div>
   <div class="side-list" id="groupList"></div>
 </div>
 
@@ -457,41 +470,41 @@
 <!-- menu -->
 <div id="menu" class="hidden">
   <div id="menuBox">
-    <h2><span class="logo"></span>Menu</h2>
+    <h2><span class="logo"></span><span data-t="Menu"></span></h2>
     <div id="menuItems"></div>
-    <div class="menu-hint">▲▼ wybór &nbsp;·&nbsp; ◀▶ / OK zmiana ustawienia &nbsp;·&nbsp; Wstecz: zamknij</div>
+    <div class="menu-hint" data-t="▲▼ wybór · ◀▶ / OK zmiana ustawienia · Wstecz: zamknij"></div>
   </div>
 </div>
 
 <!-- szukanie -->
 <div id="searchBox" class="hidden">
-  <h2>🔍 Szukaj kanału</h2>
-  <input id="searchInput" class="nav" type="text" placeholder="np. polsat, sport, tvn…">
-  <p>Wpisz fragment nazwy i naciśnij OK. Wstecz – anuluj.</p>
+  <h2 data-t="🔍 Szukaj kanału"></h2>
+  <input id="searchInput" class="nav" type="text" data-tp="np. polsat, sport, tvn…">
+  <p data-t="Wpisz fragment nazwy i naciśnij OK. Wstecz – anuluj."></p>
 </div>
 
 <!-- dodawanie playlisty -->
 <div id="add" class="hidden">
   <div class="bgimg"></div>
   <div id="addBox">
-    <h2>Dodaj playlistę</h2>
+    <h2 data-t="Dodaj playlistę"></h2>
     <div class="tabs">
-      <button class="tab nav on" data-tab="m3u">Link M3U</button>
-      <button class="tab nav" data-tab="xtream">Xtream Codes (login)</button>
+      <button class="tab nav on" data-tab="m3u" data-t="Link M3U"></button>
+      <button class="tab nav" data-tab="xtream" data-t="Xtream Codes (login)"></button>
     </div>
-    <div class="field"><label>Nazwa (dowolna)</label><input id="fName" class="nav" type="text" placeholder="np. Telewizja"></div>
+    <div class="field"><label data-t="Nazwa (dowolna)"></label><input id="fName" class="nav" type="text" data-tp="np. Telewizja"></div>
     <div id="tabM3u">
-      <div class="field"><label>Adres listy M3U</label><input id="fUrl" class="nav" type="url" placeholder="https://…/lista.m3u"></div>
-      <div class="field"><label>Adres programu EPG (opcjonalnie – zwykle wykrywany sam)</label><input id="fEpg" class="nav" type="url" placeholder="https://…/epg.xml.gz"></div>
+      <div class="field"><label data-t="Adres listy M3U"></label><input id="fUrl" class="nav" type="url" placeholder="http(s)://…/lista.m3u"></div>
+      <div class="field"><label data-t="Adres programu EPG (opcjonalnie – zwykle wykrywany sam)"></label><input id="fEpg" class="nav" type="url" placeholder="http(s)://…/epg.xml.gz"></div>
     </div>
     <div id="tabXtream" class="hidden">
-      <div class="field"><label>Adres serwera</label><input id="fServer" class="nav" type="url" placeholder="http://serwer.com:8080"></div>
-      <div class="field"><label>Nazwa użytkownika</label><input id="fUser" class="nav" type="text"></div>
-      <div class="field"><label>Hasło</label><input id="fPass" class="nav" type="password"></div>
+      <div class="field"><label data-t="Adres serwera"></label><input id="fServer" class="nav" type="url" placeholder="http://server.com:8080"></div>
+      <div class="field"><label data-t="Nazwa użytkownika"></label><input id="fUser" class="nav" type="text" autocapitalize="off" autocorrect="off"></div>
+      <div class="field"><label data-t="Hasło"></label><input id="fPass" class="nav" type="password"></div>
     </div>
     <div class="row-btns">
-      <button class="btn nav" id="addSave">Zapisz i oglądaj</button>
-      <button class="btn nav" id="addCancel">Anuluj</button>
+      <button class="btn nav" id="addSave" data-t="Zapisz i oglądaj"></button>
+      <button class="btn nav" id="addCancel" data-t="Anuluj"></button>
     </div>
     <div id="addMsg"></div>
   </div>
@@ -502,19 +515,25 @@
   <div class="bgimg"></div>
   <div class="home-top">
     <span class="logo"></span>
-    <div><h1>IPTV PLAYER</h1><div class="sub">Telewizja internetowa na Twoim telewizorze</div></div>
+    <div><h1>IPTV PLAYER</h1><div class="sub" data-t="Telewizja internetowa na Twoim telewizorze"></div></div>
     <span class="clock" id="homeClock"></span>
+    <div class="langs">
+      <button class="lang nav" data-lang="pl">🇵🇱 PL</button>
+      <button class="lang nav" data-lang="ru">🇷🇺 RU</button>
+      <button class="lang nav" data-lang="de">🇩🇪 DE</button>
+    </div>
   </div>
-  <h2>Twoje playlisty</h2>
+  <h2 data-t="Twoje playlisty"></h2>
   <div id="cards"></div>
-  <h2>Darmowe listy do wypróbowania</h2>
+  <h2 data-t="Darmowe listy do wypróbowania"></h2>
   <div id="presets">
-    <button class="chip nav" data-name="Polska (darmowe)" data-url="https://iptv-org.github.io/iptv/countries/pl.m3u">🇵🇱 Polska</button>
-    <button class="chip nav" data-name="Kategorie (świat)" data-url="https://iptv-org.github.io/iptv/index.category.m3u">📂 Wg kategorii</button>
-    <button class="chip nav" data-name="Cały świat" data-url="https://iptv-org.github.io/iptv/index.m3u">🌍 Cały świat</button>
+    <button class="chip nav" data-name="Polska" data-url="https://iptv-org.github.io/iptv/countries/pl.m3u">🇵🇱 Polska</button>
+    <button class="chip nav" data-name="Россия" data-url="https://iptv-org.github.io/iptv/countries/ru.m3u">🇷🇺 Россия</button>
+    <button class="chip nav" data-name="Deutschland" data-url="https://iptv-org.github.io/iptv/countries/de.m3u">🇩🇪 Deutschland</button>
+    <button class="chip nav" data-name="World" data-url="https://iptv-org.github.io/iptv/index.category.m3u" data-t="📂 Wg kategorii"></button>
   </div>
   <div id="homeMsg"></div>
-  <div class="home-hint">◀▶▲▼ wybór &nbsp;·&nbsp; OK otwórz &nbsp;·&nbsp; <span style="color:#e5484d">■</span> Czerwony: usuń playlistę &nbsp;·&nbsp; Wstecz: wróć do oglądania</div>
+  <div class="home-hint" data-th="◀▶▲▼ wybór · OK otwórz · <span style='color:#e5484d'>■</span> Czerwony: usuń playlistę · Wstecz: wróć do oglądania"></div>
 </div>
 
 <!-- ekran ładowania -->
@@ -523,12 +542,173 @@
   <span class="logo"></span>
   <h1>IPTV PLAYER</h1>
   <div class="spinner"></div>
-  <div id="splashText">Uruchamianie…</div>
+  <div id="splashText">…</div>
 </div>
 
 <script>
 (function () {
   "use strict";
+
+  // =====================================================================
+  //  JĘZYKI: polski (klucze), rosyjski, niemiecki
+  // =====================================================================
+  var I18N = {
+    ru: {
+      "Info": "Инфо", "Ulubione": "Избранное", "Program TV": "Телепрограмма", "Grupy": "Группы",
+      "◀ Grupy · ▶ Program · Przytrzymaj OK: menu": "◀ Группы · ▶ Программа · Удерживайте OK: меню",
+      "☰ Grupy kanałów": "☰ Группы каналов", "Menu": "Меню",
+      "▲▼ wybór · ◀▶ / OK zmiana ustawienia · Wstecz: zamknij": "▲▼ выбор · ◀▶ / OK изменить · Назад: закрыть",
+      "🔍 Szukaj kanału": "🔍 Поиск канала", "np. polsat, sport, tvn…": "например: первый, спорт, новости…",
+      "Wpisz fragment nazwy i naciśnij OK. Wstecz – anuluj.": "Введите часть названия и нажмите OK. Назад – отмена.",
+      "Dodaj playlistę": "Добавить плейлист", "Link M3U": "Ссылка M3U", "Xtream Codes (login)": "Xtream Codes (логин)",
+      "Nazwa (dowolna)": "Название (любое)", "np. Telewizja": "например: Телевидение", "Adres listy M3U": "Адрес списка M3U",
+      "Adres programu EPG (opcjonalnie – zwykle wykrywany sam)": "Адрес телепрограммы EPG (необязательно – обычно определяется сам)",
+      "Adres serwera": "Адрес сервера", "Nazwa użytkownika": "Имя пользователя", "Hasło": "Пароль",
+      "Zapisz i oglądaj": "Сохранить и смотреть", "Anuluj": "Отмена",
+      "Telewizja internetowa na Twoim telewizorze": "Интернет-телевидение на вашем телевизоре",
+      "Twoje playlisty": "Ваши плейлисты", "Darmowe listy do wypróbowania": "Бесплатные списки для пробы", "📂 Wg kategorii": "📂 По категориям",
+      "◀▶▲▼ wybór · OK otwórz · <span style='color:#e5484d'>■</span> Czerwony: usuń playlistę · Wstecz: wróć do oglądania":
+        "◀▶▲▼ выбор · OK открыть · <span style='color:#e5484d'>■</span> Красная: удалить плейлист · Назад: вернуться к просмотру",
+      "Uruchamianie…": "Запуск…",
+      "Wszystkie kanały": "Все каналы", "★ Ulubione": "★ Избранное", "Inne": "Другие", "Kanał": "Канал",
+      "Mały (10 s)": "Малый (10 с)", "Średni (20 s)": "Средний (20 с)", "Duży (40 s)": "Большой (40 с)", "Bardzo duży (60 s)": "Очень большой (60 с)",
+      "Włączone": "Вкл.", "Wyłączone": "Выкл.", "Auto (co 24 h)": "Авто (каждые 24 ч)",
+      "Wg numeru": "По номеру", "Alfabetycznie A–Z": "По алфавиту А–Я", "A–Z": "А–Я",
+      "Wczytywanie kanałów: {name}…": "Загрузка каналов: {name}…", "Odświeżanie playlisty…": "Обновление плейлиста…",
+      "serwer odpowiedział błędem {code}": "сервер ответил ошибкой {code}", "lista nie zawiera kanałów": "список не содержит каналов",
+      "Zaktualizowano: {n} kanałów": "Обновлено: {n} каналов", "Wczytano: {n} kanałów": "Загружено: {n} каналов",
+      "{name} · lista z {date}": "{name} · список от {date}",
+      "Brak połączenia z serwerem – lista z {date}": "Нет связи с сервером – список от {date}",
+      "Nie udało się odświeżyć: {err}": "Не удалось обновить: {err}",
+      "Nie można pobrać listy „{name}”. Serwer blokuje dostęp z przeglądarki (CORS) albo nie ma połączenia z internetem.":
+        "Не удалось загрузить список «{name}». Сервер блокирует доступ из браузера (CORS) или нет подключения к интернету.",
+      "Nie można pobrać listy „{name}”: adres zaczyna się od http://, a strona działa na https://. Użyj aplikacji na Androida albo adresu https://.":
+        "Не удалось загрузить список «{name}»: адрес начинается с http://, а страница работает по https://. Используйте приложение для Android или адрес https://.",
+      "Nie można pobrać listy „{name}”: {err}.": "Не удалось загрузить список «{name}»: {err}.",
+      "Program TV wczytany dla {n} kanałów": "Телепрограмма загружена для {n} каналов",
+      "Program TV niedostępny ({err})": "Телепрограмма недоступна ({err})", "serwer blokuje dostęp": "сервер блокирует доступ",
+      "brak obsługi .gz": "нет поддержки .gz", "Bez tytułu": "Без названия",
+      "Usunięto z ulubionych: {name}": "Удалено из избранного: {name}", "★ Dodano do ulubionych: {name}": "★ Добавлено в избранное: {name}",
+      "Sortowanie: {label}": "Сортировка: {label}", "Nie znaleziono kanałów.": "Каналы не найдены.", "Brak kanałów w tej grupie.": "В этой группе нет каналов.",
+      "🔍 Szukaj kanału…": "🔍 Поиск канала…", "Brak programu TV dla tego kanału.": "Нет телепрограммы для этого канала.",
+      "Program pojawi się, jeśli dostawca udostępnia EPG.": "Программа появится, если провайдер предоставляет EPG.",
+      "Trwa wczytywanie programu…": "Загрузка программы…", "TERAZ": "СЕЙЧАС",
+      "Kanał nie odpowiada.": "Канал не отвечает.", "Utracono połączenie – ponawiam ({n}/3)…": "Соединение потеряно – повтор ({n}/3)…",
+      "Nie można odtworzyć kanału.<br>Strumień może być offline albo blokuje dostęp.": "Не удаётся воспроизвести канал.<br>Поток может быть недоступен или заблокирован.",
+      "Nie można odtworzyć kanału (format nieobsługiwany lub offline).": "Не удаётся воспроизвести канал (формат не поддерживается или канал недоступен).",
+      "{name} nie działa – przełączam…": "{name} не работает – переключаю…",
+      "Wiele kanałów z rzędu nie działa – sprawdź internet lub playlistę.": "Много каналов подряд не работает – проверьте интернет или плейлист.",
+      "Dotknij ekranu albo naciśnij OK, aby włączyć obraz": "Коснитесь экрана или нажмите OK, чтобы включить изображение",
+      "Następnie: {time}  {title}": "Далее: {time}  {title}", "Brak kanału nr {n}": "Нет канала № {n}",
+      "Lista kanałów": "Список каналов", "Grupy kanałów": "Группы каналов", "Szukaj kanału": "Поиск канала", "Program TV (EPG)": "Телепрограмма (EPG)",
+      "wczytywanie…": "загрузка…", "{n} kan.": "{n} кан.", "brak": "нет", "Usuń z ulubionych": "Удалить из избранного", "Dodaj do ulubionych": "Добавить в избранное",
+      "Poprzedni kanał": "Предыдущий канал", "Brak poprzedniego kanału": "Нет предыдущего канала", "Odśwież playlistę": "Обновить плейлист",
+      "ost. akt.: {date}": "обн.: {date}", "nigdy": "никогда", "Rozmiar bufora": "Размер буфера", "Odśwież przy starcie": "Обновлять при запуске",
+      "Pomijaj niedziałające": "Пропускать нерабочие", "Sortowanie listy": "Сортировка списка", "Playlisty (ekran startowy)": "Плейлисты (главный экран)",
+      "Informacje o kanale": "Информация о канале", "Zamknij menu": "Закрыть меню", "Język": "Язык",
+      "Grupa": "Группа", "Playlista": "Плейлист", "Bufor": "Буфер", "Odtwarzacz": "Плеер",
+      "sprzętowy (ExoPlayer)": "аппаратный (ExoPlayer)", "przeglądarki": "браузерный",
+      "▶ ostatnio oglądana": "▶ последний просмотр", "{n} kanałów": "{n} каналов", "akt.: {date}": "обн.: {date}",
+      "Dodaj playlistę<br>(link M3U lub login Xtream)": "Добавить плейлист<br>(ссылка M3U или логин Xtream)",
+      "Wpisz poprawny adres listy (zaczyna się od http:// lub https://).": "Введите правильный адрес списка (начинается с http:// или https://).",
+      "Uzupełnij serwer, login i hasło.": "Заполните сервер, логин и пароль.", "Playlista {n}": "Плейлист {n}",
+      "Naciśnij czerwony jeszcze raz, aby usunąć „{name}”": "Нажмите красную ещё раз, чтобы удалить «{name}»",
+      "Usunięto playlistę „{name}”": "Плейлист «{name}» удалён",
+      "Naciśnij Wstecz jeszcze raz, aby zamknąć aplikację": "Нажмите Назад ещё раз, чтобы закрыть приложение",
+      "Kanał długo się ładuje…": "Канал долго загружается…", "Wyniki: „{q}”": "Результаты: «{q}»"
+    },
+    de: {
+      "Info": "Info", "Ulubione": "Favoriten", "Program TV": "TV-Programm", "Grupy": "Gruppen",
+      "◀ Grupy · ▶ Program · Przytrzymaj OK: menu": "◀ Gruppen · ▶ Programm · OK halten: Menü",
+      "☰ Grupy kanałów": "☰ Sendergruppen", "Menu": "Menü",
+      "▲▼ wybór · ◀▶ / OK zmiana ustawienia · Wstecz: zamknij": "▲▼ Auswahl · ◀▶ / OK ändern · Zurück: schließen",
+      "🔍 Szukaj kanału": "🔍 Sender suchen", "np. polsat, sport, tvn…": "z. B. ARD, Sport, ZDF…",
+      "Wpisz fragment nazwy i naciśnij OK. Wstecz – anuluj.": "Teil des Namens eingeben und OK drücken. Zurück – abbrechen.",
+      "Dodaj playlistę": "Playlist hinzufügen", "Link M3U": "M3U-Link", "Xtream Codes (login)": "Xtream Codes (Login)",
+      "Nazwa (dowolna)": "Name (beliebig)", "np. Telewizja": "z. B. Fernsehen", "Adres listy M3U": "Adresse der M3U-Liste",
+      "Adres programu EPG (opcjonalnie – zwykle wykrywany sam)": "EPG-Adresse (optional – meist automatisch erkannt)",
+      "Adres serwera": "Serveradresse", "Nazwa użytkownika": "Benutzername", "Hasło": "Passwort",
+      "Zapisz i oglądaj": "Speichern und ansehen", "Anuluj": "Abbrechen",
+      "Telewizja internetowa na Twoim telewizorze": "Internetfernsehen auf Ihrem Fernseher",
+      "Twoje playlisty": "Ihre Playlists", "Darmowe listy do wypróbowania": "Kostenlose Listen zum Ausprobieren", "📂 Wg kategorii": "📂 Nach Kategorien",
+      "◀▶▲▼ wybór · OK otwórz · <span style='color:#e5484d'>■</span> Czerwony: usuń playlistę · Wstecz: wróć do oglądania":
+        "◀▶▲▼ Auswahl · OK öffnen · <span style='color:#e5484d'>■</span> Rot: Playlist löschen · Zurück: weiter ansehen",
+      "Uruchamianie…": "Wird gestartet…",
+      "Wszystkie kanały": "Alle Sender", "★ Ulubione": "★ Favoriten", "Inne": "Sonstige", "Kanał": "Sender",
+      "Mały (10 s)": "Klein (10 s)", "Średni (20 s)": "Mittel (20 s)", "Duży (40 s)": "Groß (40 s)", "Bardzo duży (60 s)": "Sehr groß (60 s)",
+      "Włączone": "An", "Wyłączone": "Aus", "Auto (co 24 h)": "Auto (alle 24 h)",
+      "Wg numeru": "Nach Nummer", "Alfabetycznie A–Z": "Alphabetisch A–Z", "A–Z": "A–Z",
+      "Wczytywanie kanałów: {name}…": "Sender werden geladen: {name}…", "Odświeżanie playlisty…": "Playlist wird aktualisiert…",
+      "serwer odpowiedział błędem {code}": "Server meldet Fehler {code}", "lista nie zawiera kanałów": "Liste enthält keine Sender",
+      "Zaktualizowano: {n} kanałów": "Aktualisiert: {n} Sender", "Wczytano: {n} kanałów": "Geladen: {n} Sender",
+      "{name} · lista z {date}": "{name} · Liste vom {date}",
+      "Brak połączenia z serwerem – lista z {date}": "Keine Verbindung zum Server – Liste vom {date}",
+      "Nie udało się odświeżyć: {err}": "Aktualisierung fehlgeschlagen: {err}",
+      "Nie można pobrać listy „{name}”. Serwer blokuje dostęp z przeglądarki (CORS) albo nie ma połączenia z internetem.":
+        "Liste „{name}“ kann nicht geladen werden. Der Server blockiert den Zugriff aus dem Browser (CORS) oder es besteht keine Internetverbindung.",
+      "Nie można pobrać listy „{name}”: adres zaczyna się od http://, a strona działa na https://. Użyj aplikacji na Androida albo adresu https://.":
+        "Liste „{name}“ kann nicht geladen werden: Die Adresse beginnt mit http://, die Seite läuft aber über https://. Nutzen Sie die Android-App oder eine https://-Adresse.",
+      "Nie można pobrać listy „{name}”: {err}.": "Liste „{name}“ kann nicht geladen werden: {err}.",
+      "Program TV wczytany dla {n} kanałów": "TV-Programm für {n} Sender geladen",
+      "Program TV niedostępny ({err})": "TV-Programm nicht verfügbar ({err})", "serwer blokuje dostęp": "Server blockiert Zugriff",
+      "brak obsługi .gz": "keine .gz-Unterstützung", "Bez tytułu": "Ohne Titel",
+      "Usunięto z ulubionych: {name}": "Aus Favoriten entfernt: {name}", "★ Dodano do ulubionych: {name}": "★ Zu Favoriten hinzugefügt: {name}",
+      "Sortowanie: {label}": "Sortierung: {label}", "Nie znaleziono kanałów.": "Keine Sender gefunden.", "Brak kanałów w tej grupie.": "Keine Sender in dieser Gruppe.",
+      "🔍 Szukaj kanału…": "🔍 Sender suchen…", "Brak programu TV dla tego kanału.": "Kein TV-Programm für diesen Sender.",
+      "Program pojawi się, jeśli dostawca udostępnia EPG.": "Das Programm erscheint, wenn der Anbieter EPG bereitstellt.",
+      "Trwa wczytywanie programu…": "Programm wird geladen…", "TERAZ": "JETZT",
+      "Kanał nie odpowiada.": "Sender antwortet nicht.", "Utracono połączenie – ponawiam ({n}/3)…": "Verbindung verloren – neuer Versuch ({n}/3)…",
+      "Nie można odtworzyć kanału.<br>Strumień może być offline albo blokuje dostęp.": "Sender kann nicht abgespielt werden.<br>Der Stream ist evtl. offline oder gesperrt.",
+      "Nie można odtworzyć kanału (format nieobsługiwany lub offline).": "Sender kann nicht abgespielt werden (Format nicht unterstützt oder offline).",
+      "{name} nie działa – przełączam…": "{name} funktioniert nicht – schalte weiter…",
+      "Wiele kanałów z rzędu nie działa – sprawdź internet lub playlistę.": "Viele Sender hintereinander funktionieren nicht – Internet oder Playlist prüfen.",
+      "Dotknij ekranu albo naciśnij OK, aby włączyć obraz": "Bildschirm berühren oder OK drücken, um das Bild zu starten",
+      "Następnie: {time}  {title}": "Danach: {time}  {title}", "Brak kanału nr {n}": "Kein Sender Nr. {n}",
+      "Lista kanałów": "Senderliste", "Grupy kanałów": "Sendergruppen", "Szukaj kanału": "Sender suchen", "Program TV (EPG)": "TV-Programm (EPG)",
+      "wczytywanie…": "lädt…", "{n} kan.": "{n} Sender", "brak": "keins", "Usuń z ulubionych": "Aus Favoriten entfernen", "Dodaj do ulubionych": "Zu Favoriten hinzufügen",
+      "Poprzedni kanał": "Vorheriger Sender", "Brak poprzedniego kanału": "Kein vorheriger Sender", "Odśwież playlistę": "Playlist aktualisieren",
+      "ost. akt.: {date}": "akt.: {date}", "nigdy": "nie", "Rozmiar bufora": "Puffergröße", "Odśwież przy starcie": "Beim Start aktualisieren",
+      "Pomijaj niedziałające": "Defekte überspringen", "Sortowanie listy": "Sortierung", "Playlisty (ekran startowy)": "Playlists (Startseite)",
+      "Informacje o kanale": "Senderinfo", "Zamknij menu": "Menü schließen", "Język": "Sprache",
+      "Grupa": "Gruppe", "Playlista": "Playlist", "Bufor": "Puffer", "Odtwarzacz": "Player",
+      "sprzętowy (ExoPlayer)": "Hardware (ExoPlayer)", "przeglądarki": "Browser",
+      "▶ ostatnio oglądana": "▶ zuletzt gesehen", "{n} kanałów": "{n} Sender", "akt.: {date}": "akt.: {date}",
+      "Dodaj playlistę<br>(link M3U lub login Xtream)": "Playlist hinzufügen<br>(M3U-Link oder Xtream-Login)",
+      "Wpisz poprawny adres listy (zaczyna się od http:// lub https://).": "Gültige Listenadresse eingeben (beginnt mit http:// oder https://).",
+      "Uzupełnij serwer, login i hasło.": "Server, Benutzername und Passwort ausfüllen.", "Playlista {n}": "Playlist {n}",
+      "Naciśnij czerwony jeszcze raz, aby usunąć „{name}”": "Rot erneut drücken, um „{name}“ zu löschen",
+      "Usunięto playlistę „{name}”": "Playlist „{name}“ gelöscht",
+      "Naciśnij Wstecz jeszcze raz, aby zamknąć aplikację": "Zurück erneut drücken, um die App zu schließen",
+      "Kanał długo się ładuje…": "Sender lädt lange…", "Wyniki: „{q}”": "Ergebnisse: „{q}“"
+    }
+  };
+  var LANGS = [ { id: "pl", label: "Polski" }, { id: "ru", label: "Русский" }, { id: "de", label: "Deutsch" } ];
+  var S_LANG = "iptv_lang";
+  var lang = (function () {
+    var saved = null; try { saved = localStorage.getItem(S_LANG); } catch (e) {}
+    if (saved === "pl" || saved === "ru" || saved === "de") return saved;
+    var n = (navigator.language || "pl").toLowerCase();
+    return n.indexOf("ru") === 0 ? "ru" : n.indexOf("de") === 0 ? "de" : "pl";
+  })();
+  function T(s, vars) {
+    var out = (I18N[lang] && I18N[lang][s]) || s;
+    if (vars) for (var k in vars) out = out.split("{" + k + "}").join(vars[k]);
+    return out;
+  }
+  function applyStaticTexts() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function (el) { el.textContent = T(el.getAttribute("data-t")); });
+    document.querySelectorAll("[data-th]").forEach(function (el) { el.innerHTML = T(el.getAttribute("data-th")); });
+    document.querySelectorAll("[data-tp]").forEach(function (el) { el.placeholder = T(el.getAttribute("data-tp")); });
+    document.querySelectorAll(".lang").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-lang") === lang); });
+  }
+  function setLang(l) {
+    lang = l; try { localStorage.setItem(S_LANG, l); } catch (e) {}
+    applyStaticTexts();
+    if (allChannels.length) { buildGroups(); applyGroup(true); }
+    if (screen === "home") showHome($("homeMsg").textContent, navFocus);
+    if (screen === "menu") renderMenu();
+  }
 
   // =====================================================================
   //  PRZYCISKI PILOTA (różne platformy TV) + klawisze do testów na komputerze
@@ -548,11 +728,15 @@
     return -1;
   }
 
-  var LONG_PRESS_MS = 700, ROW_H = 76, CH_ROW_H = 70;   // ROW_H = wysokość wiersza grup/programu (70 + marginesy)
-  var AUTO_RELOAD_MS = 24 * 3600 * 1000, PLAY_TIMEOUT_MS = 15000, MAX_SKIPS = 15;
-  var FAV_GROUP = "★ Ulubione", ALL_GROUP = "Wszystkie kanały";
+  var LONG_PRESS_MS = 700, ROW_H = 76, CH_ROW_H = 70;
+  var AUTO_RELOAD_MS = 24 * 3600 * 1000, PLAY_TIMEOUT_MS = 30000, SLOW_HINT_MS = 8000, MAX_SKIPS = 15;
+  var FAV_GROUP = "\u0001fav", ALL_GROUP = "\u0001all";      // wewnętrzne nazwy grup specjalnych
 
-  // klucze w pamięci telewizora
+  // tryb aplikacji Android ze sprzętowym odtwarzaczem (ExoPlayer)
+  var NATIVE = !!(window.Android && typeof window.Android.play === "function");
+  if (NATIVE) document.documentElement.classList.add("native");
+
+  // klucze w pamięci urządzenia
   var S_PLS = "iptv_playlists", S_ACTIVE = "iptv_active", S_LAST = "iptv_last_channel", S_FAV = "iptv_favorites",
       S_BUFFER = "iptv_buffer", S_RELOAD = "iptv_reload_on_start", S_SKIP = "iptv_skip_dead", S_SORT = "iptv_sort";
   function cacheKey(id) { return "iptv_cache_" + id; }
@@ -579,9 +763,10 @@
   function hm(ts) { var d = new Date(ts); return pad(d.getHours()) + ":" + pad(d.getMinutes()); }
   function formatDate(ts) { var d = new Date(ts); return pad(d.getDate()) + "." + pad(d.getMonth() + 1) + "." + d.getFullYear() + " " + hm(ts); }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (m) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]; }); }
-  function fold(s) {  // małe litery, bez polskich znaków – do szukania i porównań
+  function fold(s) {  // małe litery bez znaków diakrytycznych (polskie, niemieckie; cyrylica bez zmian)
     return String(s || "").toLowerCase().replace(/[ąàáâä]/g, "a").replace(/[ćç]/g, "c").replace(/[ęèéêë]/g, "e").replace(/ł/g, "l")
-      .replace(/[ńñ]/g, "n").replace(/[óòôöõ]/g, "o").replace(/ś/g, "s").replace(/[źż]/g, "z").replace(/[ùúûü]/g, "u");
+      .replace(/[ńñ]/g, "n").replace(/[óòôöõ]/g, "o").replace(/ś/g, "s").replace(/[źż]/g, "z").replace(/[ùúûü]/g, "u")
+      .replace(/ß/g, "ss").replace(/ё/g, "е");
   }
 
   var bufferIdx = optIndex(BUFFER_OPTS, load(S_BUFFER), 1);
@@ -596,8 +781,7 @@
   try { pls = JSON.parse(load(S_PLS) || "[]") || []; } catch (e) { pls = []; }
   var activeId = load(S_ACTIVE);
 
-  // przeniesienie listy z poprzedniej wersji aplikacji
-  (function migrate() {
+  (function migrate() {   // przeniesienie listy z pierwszej wersji aplikacji
     var oldUrl = load("iptv_playlist_url");
     if (!pls.length && oldUrl) {
       pls.push({ id: "p1", name: "Moja playlista", type: "m3u", url: oldUrl });
@@ -616,7 +800,8 @@
   function newId() { return "p" + Date.now().toString(36); }
   function xtreamBase(p) { var s = (p.server || "").trim().replace(/\/+$/, ""); if (!/^https?:\/\//i.test(s)) s = "http://" + s; return s; }
   function plUrl(p) {
-    if (p.type === "xtream") return xtreamBase(p) + "/get.php?username=" + encodeURIComponent(p.user) + "&password=" + encodeURIComponent(p.pass) + "&type=m3u_plus&output=m3u8";
+    if (p.type === "xtream") return xtreamBase(p) + "/get.php?username=" + encodeURIComponent(p.user) + "&password=" + encodeURIComponent(p.pass) +
+      "&type=m3u_plus&output=" + (NATIVE ? "ts" : "m3u8");     // sprzętowy odtwarzacz lepiej radzi sobie z TS
     return p.url;
   }
   function plEpgUrl(p) {
@@ -624,7 +809,7 @@
     if (p.type === "xtream") return xtreamBase(p) + "/xmltv.php?username=" + encodeURIComponent(p.user) + "&password=" + encodeURIComponent(p.pass);
     return p.tvg || "";
   }
-  function lastUpdate(p) { var ts = p ? parseInt(load(updKey(p.id)), 10) : 0; return ts ? formatDate(ts) : "nigdy"; }
+  function lastUpdate(p) { var ts = p ? parseInt(load(updKey(p.id)), 10) : 0; return ts ? formatDate(ts) : T("nigdy"); }
 
   // =====================================================================
   //  STAN
@@ -635,6 +820,7 @@
   var searchQuery = "";
   var menuSel = 0, groupSel = 0, guideSel = 0, guideItems = [], guideCh = null, guideFrom = "watch";
   var toastTimer, bannerTimer, numTimer, numBuf = "";
+  var zapList = null;           // lista, po której przełączamy ▲▼ (grupa, z której wybrano kanał)
 
   var favs = [];
   try { favs = JSON.parse(load(S_FAV) || "[]") || []; } catch (e) { favs = []; }
@@ -643,8 +829,15 @@
   // =====================================================================
   //  PARSER M3U
   // =====================================================================
+  function normName(n) {
+    var s = fold(n).replace(/\(.*?\)|\[.*?\]/g, " ")
+      .replace(/(^|\s)(hd|fhd|uhd|4k|sd|pl|ru|de|polska|poland|россия|deutschland|orig|backup|\+\d+)(?=\s|$)/g, " ");
+    var out;
+    try { out = s.replace(/[^\p{L}\p{N}]/gu, ""); } catch (e) { out = s.replace(/[^a-z0-9Ѐ-ӿ]/g, ""); }
+    return out || fold(n).replace(/\s+/g, "");
+  }
   function parseM3U(text) {
-    var lines = text.split(/\r?\n/), out = [], cur = null, tvg = "";
+    var lines = text.split(/\r?\n/), out = [], cur = null, tvg = "", hasChno = false;
     for (var i = 0; i < lines.length; i++) {
       var l = lines[i].trim();
       if (!l) continue;
@@ -653,25 +846,32 @@
         if (m) tvg = m[1].split(",")[0].trim();
       } else if (l.indexOf("#EXTINF") === 0) {
         var attr = (function (line) { return function (n) { var mm = line.match(new RegExp(n + '="([^"]*)"')); return mm ? mm[1] : ""; }; })(l);
-        var comma = l.lastIndexOf(",");
+        var comma = l.search(/,(?=[^"]*$)/);        // przecinek po ostatnim atrybucie
+        if (comma < 0) comma = l.lastIndexOf(",");
         cur = {
-          name: (comma > -1 ? l.slice(comma + 1) : "").trim() || attr("tvg-name") || "Kanał",
-          logo: attr("tvg-logo"), group: attr("group-title") || "Inne",
-          tid: attr("tvg-id"), tname: attr("tvg-name")
+          name: (comma > -1 ? l.slice(comma + 1) : "").trim() || attr("tvg-name") || "",
+          logo: attr("tvg-logo"), group: attr("group-title"),
+          tid: attr("tvg-id"), tname: attr("tvg-name"), chno: attr("tvg-chno") || attr("channel-number")
         };
+      } else if (l.indexOf("#EXTGRP:") === 0 && cur && !cur.group) {
+        cur.group = l.slice(8).trim();
       } else if (l.charAt(0) !== "#") {
-        var c = cur || { name: l, logo: "", group: "Inne", tid: "", tname: "" };
-        c.url = l; c.num = out.length + 1;
+        var c = cur || { name: "", logo: "", group: "", tid: "", tname: "", chno: "" };
+        c.url = l;
+        c.pos = out.length + 1;
+        c.num = /^\d+$/.test(c.chno) ? parseInt(c.chno, 10) : c.pos;
+        if (/^\d+$/.test(c.chno)) hasChno = true;
+        if (!c.name) c.name = T("Kanał") + " " + c.pos;
         c.ek = c.tid ? c.tid.toLowerCase() : normName(c.tname || c.name);
         out.push(c);
         cur = null;
       }
     }
+    // numery od dostawcy (tvg-chno) – lista w kolejności numerów
+    if (hasChno) out.sort(function (a, b) { return (a.num - b.num) || (a.pos - b.pos); });
     return { channels: out, tvg: tvg };
   }
-  function normName(n) {
-    return fold(n).replace(/\(.*?\)|\[.*?\]/g, "").replace(/\b(hd|fhd|uhd|4k|sd|pl|polska|poland)\b/g, "").replace(/[^a-z0-9]/g, "");
-  }
+  function groupLabel(g) { return g === ALL_GROUP ? T("Wszystkie kanały") : g === FAV_GROUP ? T("★ Ulubione") : (g || T("Inne")); }
 
   // =====================================================================
   //  WCZYTYWANIE PLAYLISTY
@@ -680,45 +880,50 @@
 
   function openPlaylist(p, forceFetch) {
     activeId = p.id; savePls();
+    epg = {}; epgCount = 0; epgFor = null;
     var mode = RELOAD_OPTS[reloadIdx].id;
     var cached = load(cacheKey(p.id));
     var updated = parseInt(load(updKey(p.id)), 10) || 0;
     var useCache = !forceFetch && cached && (mode === "off" || (mode === "auto" && Date.now() - updated < AUTO_RELOAD_MS));
     if (useCache) {
       var r = parseM3U(cached);
-      if (r.channels.length) { usePlaylist(r.channels, true); showToast(p.name + " · lista z " + lastUpdate(p)); loadEpg(p); return; }
+      if (r.channels.length) { usePlaylist(r.channels, true); showToast(T("{name} · lista z {date}", { name: p.name, date: lastUpdate(p) })); loadEpg(p); return; }
     }
     fetchPlaylist(p, false);
   }
 
   function fetchPlaylist(p, isRefresh) {
-    if (!isRefresh) splash("Wczytywanie kanałów: " + p.name + "…");
-    else showToast("Odświeżanie playlisty…");
+    if (!isRefresh) splash(T("Wczytywanie kanałów: {name}…", { name: p.name }));
+    else showToast(T("Odświeżanie playlisty…"));
     fetch(plUrl(p), { cache: "no-store" }).then(function (r) {
-      if (!r.ok) throw new Error("serwer odpowiedział błędem " + r.status);
+      if (!r.ok) throw new Error(T("serwer odpowiedział błędem {code}", { code: r.status }));
       return r.text();
     }).then(function (txt) {
       var r = parseM3U(txt);
-      if (!r.channels.length) throw new Error("lista nie zawiera kanałów");
+      if (!r.channels.length) throw new Error(T("lista nie zawiera kanałów"));
       p.count = r.channels.length; if (r.tvg) p.tvg = r.tvg; savePls();
       store(updKey(p.id), String(Date.now()));
       if (!store(cacheKey(p.id), txt)) remove(cacheKey(p.id));     // za duża – bez kopii
       usePlaylist(r.channels, !isRefresh);
-      showToast((isRefresh ? "Zaktualizowano: " : "Wczytano: ") + r.channels.length + " kanałów");
+      showToast(T(isRefresh ? "Zaktualizowano: {n} kanałów" : "Wczytano: {n} kanałów", { n: r.channels.length }));
+      if (isRefresh) { epg = {}; epgCount = 0; epgFor = null; }
       loadEpg(p);
       if (screen === "menu") renderMenu();
     }).catch(function (e) {
       var cached = load(cacheKey(p.id));
       if (cached && !isRefresh) {
         usePlaylist(parseM3U(cached).channels, true);
-        showToast("Brak połączenia z serwerem – lista z " + lastUpdate(p));
+        showToast(T("Brak połączenia z serwerem – lista z {date}", { date: lastUpdate(p) }));
+        loadEpg(p);
         return;
       }
-      if (isRefresh && allChannels.length) { showToast("Nie udało się odświeżyć: " + e.message); return; }
-      var why = (e && e.name === "TypeError")
-        ? "Nie można pobrać listy „" + p.name + "”. Serwer blokuje dostęp z przeglądarki (CORS)" +
-          (/^http:/i.test(plUrl(p)) && location.protocol === "https:" ? " albo adres zaczyna się od http:// (wymagane https://)." : ".")
-        : "Nie można pobrać listy „" + p.name + "”: " + e.message + ".";
+      if (isRefresh && allChannels.length) { showToast(T("Nie udało się odświeżyć: {err}", { err: e.message })); return; }
+      var why;
+      if (e && e.name === "TypeError") {
+        why = /^http:/i.test(plUrl(p)) && location.protocol === "https:"
+          ? T("Nie można pobrać listy „{name}”: adres zaczyna się od http://, a strona działa na https://. Użyj aplikacji na Androida albo adresu https://.", { name: p.name })
+          : T("Nie można pobrać listy „{name}”. Serwer blokuje dostęp z przeglądarki (CORS) albo nie ma połączenia z internetem.", { name: p.name });
+      } else why = T("Nie można pobrać listy „{name}”: {err}.", { name: p.name, err: e.message });
       showHome(why);
     });
   }
@@ -726,13 +931,13 @@
   function usePlaylist(ch, fresh) {
     var playingUrl = !fresh && allChannels[current] ? allChannels[current].url : null;
     allChannels = ch;
-    searchQuery = "";
+    searchQuery = ""; zapList = null;
     buildGroups();
     if (groupIdx >= groups.length) groupIdx = 0;
     var lastUrl = load(S_LAST), idx = 0;
     if (lastUrl) for (var i = 0; i < ch.length; i++) if (ch[i].url === lastUrl) { idx = i; break; }
     previous = -1;
-    if (playingUrl && ch[idx] && ch[idx].url === playingUrl && hls) { current = idx; }
+    if (playingUrl && ch[idx] && ch[idx].url === playingUrl && (hadPlayed || !playAuto)) { current = idx; }
     else { current = -1; if (screen === "splash" || screen === "home" || screen === "add") setScreen("watch"); zapDir = 1; play(idx, true); }
     applyGroup();
   }
@@ -740,7 +945,7 @@
   // =====================================================================
   //  PRZEWODNIK EPG (XMLTV, także .gz) – wczytywany w tle
   // =====================================================================
-  var epg = {}, epgLoading = false, epgCount = 0;
+  var epg = {}, epgLoading = false, epgCount = 0, epgFor = null;
 
   function parseXmlTime(s) {
     var m = String(s).match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})?\s*([+-]\d{4})?/);
@@ -757,8 +962,9 @@
 
   function loadEpg(p) {
     var url = plEpgUrl(p);
-    if (!url || epgLoading || !window.ReadableStream) return;
+    if (!url || epgLoading || !window.ReadableStream || epgFor === p.id) return;
     epgLoading = true;
+    var plId = p.id;
     var wanted = {}, idMap = {}, newEpg = {}, count = 0;
     allChannels.forEach(function (c) { wanted[c.ek] = 1; if (c.tid) wanted[c.tid.toLowerCase()] = 1; });
     var now = Date.now(), from = now - 2 * 3600000, to = now + 30 * 3600000;
@@ -767,14 +973,13 @@
       if (!resp.ok) throw new Error("HTTP " + resp.status);
       var reader = resp.body.getReader();
       return reader.read().then(function (first) {
-        // wykrycie gzip po pierwszych bajtach
-        var gz = first.value && first.value[0] === 0x1f && first.value[1] === 0x8b;
+        var gz = first.value && first.value[0] === 0x1f && first.value[1] === 0x8b;     // gzip po pierwszych bajtach
         var stream = new ReadableStream({
           start: function (ctrl) { if (first.value) ctrl.enqueue(first.value); if (first.done) ctrl.close(); },
           pull: function (ctrl) { return reader.read().then(function (r) { if (r.done) ctrl.close(); else ctrl.enqueue(r.value); }); }
         });
         if (gz) {
-          if (!window.DecompressionStream) throw new Error("brak obsługi .gz");
+          if (!window.DecompressionStream) throw new Error(T("brak obsługi .gz"));
           stream = stream.pipeThrough(new DecompressionStream("gzip"));
         }
         var rd = stream.getReader(), dec = new TextDecoder("utf-8"), buf = "";
@@ -795,7 +1000,7 @@
             var list = newEpg[key] || (newEpg[key] = []);
             if (list.length > 120) return;
             var tm = body.match(/<title[^>]*>([\s\S]*?)<\/title>/), dm = body.match(/<desc[^>]*>([\s\S]*?)<\/desc>/);
-            list.push({ s: s, e: e, t: xmlText(tm ? tm[1] : "Bez tytułu"), d: dm ? xmlText(dm[1]) : "" });
+            list.push({ s: s, e: e, t: tm ? xmlText(tm[1]) : "", d: dm ? xmlText(dm[1]) : "" });
             count++;
           }
         }
@@ -805,7 +1010,7 @@
             re.lastIndex = 0; var m, end = 0;
             while ((m = re.exec(buf))) { handle(m[1], m[2], m[3]); end = re.lastIndex; }
             buf = buf.slice(end);
-            if (buf.length > 4000000) buf = buf.slice(-200000);    // zabezpieczenie pamięci
+            if (buf.length > 4000000) buf = buf.slice(-200000);
             if (r.done) return;
             return step();
           });
@@ -813,15 +1018,18 @@
         return step();
       });
     }).then(function () {
+      epgLoading = false;
+      if (activeId !== plId) return;                 // w międzyczasie zmieniono playlistę
       for (var k in newEpg) newEpg[k].sort(function (a, b) { return a.s - b.s; });
-      epg = newEpg; epgCount = Object.keys(newEpg).length; epgLoading = false;
-      if (epgCount) showToast("Program TV wczytany dla " + epgCount + " kanałów");
+      epg = newEpg; epgCount = Object.keys(newEpg).length; epgFor = plId;
+      if (epgCount) showToast(T("Program TV wczytany dla {n} kanałów", { n: epgCount }));
       if (screen === "playlist") renderList();
+      if (screen === "guide") openGuide(guideCh, guideFrom);
       if (screen === "menu") renderMenu();
       if (!$("banner").classList.contains("hidden")) renderBanner();
     }).catch(function (e) {
       epgLoading = false;
-      showToast("Program TV niedostępny (" + (e && e.name === "TypeError" ? "serwer blokuje dostęp" : e.message) + ")");
+      if (activeId === plId) showToast(T("Program TV niedostępny ({err})", { err: e && e.name === "TypeError" ? T("serwer blokuje dostęp") : e.message }));
     });
   }
 
@@ -836,25 +1044,27 @@
     return { cur: cur, next: next };
   }
   function pct(p) { var now = Date.now(); return Math.max(0, Math.min(100, Math.round((now - p.s) / (p.e - p.s) * 100))); }
+  function ptitle(p) { return p.t || T("Bez tytułu"); }
 
   // =====================================================================
   //  GRUPY, SORTOWANIE, SZUKANIE
   // =====================================================================
   function buildGroups() {
-    var g = {}, order = [];
-    allChannels.forEach(function (c) { if (!g[c.group]) { g[c.group] = 0; order.push(c.group); } g[c.group]++; });
+    var g = Object.create(null), order = [];
+    allChannels.forEach(function (c) { if (!(c.group in g)) { g[c.group] = 0; order.push(c.group); } g[c.group]++; });
     groups = [{ name: ALL_GROUP, count: allChannels.length }];
     var fc = allChannels.filter(isFav).length;
     if (fc) groups.push({ name: FAV_GROUP, count: fc });
     order.forEach(function (n) { groups.push({ name: n, count: g[n] }); });
   }
+  function currentGroupName() { return groups[groupIdx] ? groups[groupIdx].name : ALL_GROUP; }
   function applyGroup(keepSel) {
-    var g = groups[groupIdx] ? groups[groupIdx].name : ALL_GROUP, q = fold(searchQuery);
-    if (searchQuery) filtered = allChannels.filter(function (c) { return fold(c.name).indexOf(q) > -1; });
+    var g = currentGroupName(), q = fold(searchQuery);
+    if (searchQuery) filtered = allChannels.filter(function (c) { return fold(c.name).indexOf(q) > -1 || String(c.num) === searchQuery; });
     else filtered = g === ALL_GROUP ? allChannels.slice() : g === FAV_GROUP ? allChannels.filter(isFav) : allChannels.filter(function (c) { return c.group === g; });
-    if (SORT_OPTS[sortIdx].id === "az") filtered.sort(function (a, b) { return a.name.localeCompare(b.name, "pl"); });
-    $("groupName").textContent = (searchQuery ? "🔍 „" + searchQuery + "”" : g) + "  (" + filtered.length + ")";
-    $("azLabel").textContent = SORT_OPTS[sortIdx].id === "az" ? "Wg numeru" : "A–Z";
+    if (SORT_OPTS[sortIdx].id === "az") filtered.sort(function (a, b) { return a.name.localeCompare(b.name, lang); });
+    $("groupName").textContent = (searchQuery ? T("Wyniki: „{q}”", { q: searchQuery }) : groupLabel(g)) + "  (" + filtered.length + ")";
+    $("azLabel").textContent = SORT_OPTS[sortIdx].id === "az" ? T("Wg numeru") : T("A–Z");
     if (!keepSel) {
       sel = 0;
       for (var i = 0; i < filtered.length; i++) if (filtered[i] === allChannels[current]) { sel = i; break; }
@@ -867,8 +1077,8 @@
     var i = favs.indexOf(c.url);
     if (i > -1) favs.splice(i, 1); else favs.push(c.url);
     store(S_FAV, JSON.stringify(favs));
-    showToast(i > -1 ? "Usunięto z ulubionych: " + c.name : "★ Dodano do ulubionych: " + c.name);
-    var keep = groups[groupIdx] ? groups[groupIdx].name : ALL_GROUP;
+    showToast(T(i > -1 ? "Usunięto z ulubionych: {name}" : "★ Dodano do ulubionych: {name}", { name: c.name }));
+    var keep = currentGroupName();
     buildGroups();
     groupIdx = 0; for (var k = 0; k < groups.length; k++) if (groups[k].name === keep) { groupIdx = k; break; }
     applyGroup(true);
@@ -876,7 +1086,7 @@
   }
   function toggleSort() {
     sortIdx = (sortIdx + 1) % SORT_OPTS.length; store(S_SORT, SORT_OPTS[sortIdx].id);
-    applyGroup(); showToast("Sortowanie: " + SORT_OPTS[sortIdx].label);
+    applyGroup(); showToast(T("Sortowanie: {label}", { label: T(SORT_OPTS[sortIdx].label) }));
   }
 
   // =====================================================================
@@ -886,7 +1096,7 @@
 
   function renderList() {
     var box = $("list");
-    if (!filtered.length) { box.innerHTML = '<div class="empty">' + (searchQuery ? "Nie znaleziono kanałów." : "Brak kanałów w tej grupie.") + '</div>'; return; }
+    if (!filtered.length) { box.innerHTML = '<div class="empty">' + esc(T(searchQuery ? "Nie znaleziono kanałów." : "Brak kanałów w tej grupie.")) + '</div>'; return; }
     var visible = Math.floor(box.clientHeight / CH_ROW_H) || 11;
     var start = windowStart(sel, filtered.length, visible), html = "", playing = allChannels[current];
     for (var i = start; i < Math.min(start + visible, filtered.length); i++) {
@@ -895,22 +1105,22 @@
         '<span class="num">' + c.num + '</span>' +
         (c.logo ? '<img src="' + esc(c.logo) + '" onerror="this.style.visibility=\'hidden\'">' : '<img style="visibility:hidden">') +
         '<span class="name">' + (isFav(c) ? '<span class="fav">★ </span>' : '') + esc(c.name) + '</span>' +
-        '<span class="prog">' + (p ? esc(p.t) : "") + '</span>' +
+        '<span class="prog">' + (p ? esc(ptitle(p)) : "") + '</span>' +
         (p ? '<span class="rem">+' + Math.max(1, Math.ceil((p.e - Date.now()) / 60000)) + '</span><span class="bar"><i style="width:' + pct(p) + '%"></i></span>'
            : '<span class="rem"></span><span class="bar" style="visibility:hidden"></span>') +
         '</div>';
     }
-    box.style.height = ""; box.innerHTML = html;
+    box.innerHTML = html;
   }
 
   function renderGroups() {
-    var box = $("groupList"), visible = Math.floor(box.clientHeight / ROW_H) || 13;
-    var items = groups.concat([{ name: "🔍 Szukaj kanału…", search: true }]);
+    var box = $("groupList"), visible = Math.floor(box.clientHeight / ROW_H) || 12;
+    var items = groups.concat([{ name: "\u0001search", search: true }]);
     var start = windowStart(groupSel, items.length, visible), html = "";
     for (var i = start; i < Math.min(start + visible, items.length); i++) {
       var g = items[i];
       html += '<div data-i="' + i + '" class="gr' + (i === groupSel ? " sel" : "") + (i === groupIdx && !searchQuery ? " cur" : "") + '">' +
-              '<span class="gname">' + esc(g.name) + '</span>' + (g.search ? "" : '<span class="cnt">' + g.count + '</span>') + '</div>';
+              '<span class="gname">' + esc(g.search ? T("🔍 Szukaj kanału…") : groupLabel(g.name)) + '</span>' + (g.search ? "" : '<span class="cnt">' + g.count + '</span>') + '</div>';
     }
     box.innerHTML = html;
   }
@@ -924,38 +1134,42 @@
     guideCh = c; guideFrom = from;
     var l = progs(c) || [], now = Date.now();
     guideItems = l.filter(function (p) { return p.e > now; });
-    guideSel = 0;
+    if (screen !== "guide") guideSel = 0;
+    guideSel = Math.min(guideSel, Math.max(0, guideItems.length - 1));
     $("gName").textContent = c.num + ". " + c.name;
-    var lg = $("gLogo"); if (c.logo) { lg.src = c.logo; lg.style.visibility = ""; } else lg.style.visibility = "hidden";
+    var lg = $("gLogo"); if (c.logo) { lg.src = c.logo; lg.style.display = ""; } else lg.style.display = "none";
     setScreen("guide");
     renderGuide();
   }
   function renderGuide() {
     var box = $("guideList");
     if (!guideItems.length) {
-      box.innerHTML = '<div class="empty">Brak programu TV dla tego kanału.<br><br><small>Program pojawi się, jeśli dostawca udostępnia EPG' +
-        (epgLoading ? " (trwa wczytywanie…)" : "") + '.</small></div>';
+      box.innerHTML = '<div class="empty">' + esc(T("Brak programu TV dla tego kanału.")) + '<br><br><small>' +
+        esc(T(epgLoading ? "Trwa wczytywanie programu…" : "Program pojawi się, jeśli dostawca udostępnia EPG.")) + '</small></div>';
       $("guideDesc").innerHTML = ""; return;
     }
-    var visible = Math.floor(box.clientHeight / ROW_H) || 9, start = windowStart(guideSel, guideItems.length, visible), html = "", now = Date.now();
+    var visible = Math.floor(box.clientHeight / ROW_H) || 8, start = windowStart(guideSel, guideItems.length, visible), html = "", now = Date.now();
     for (var i = start; i < Math.min(start + visible, guideItems.length); i++) {
       var p = guideItems[i], isNow = p.s <= now && p.e > now;
       html += '<div data-i="' + i + '" class="pg' + (i === guideSel ? " sel" : "") + (isNow ? " now" : "") + '">' +
-              '<span class="tm">' + (isNow ? "TERAZ " + hm(p.s) : hm(p.s) + "–" + hm(p.e)) + '</span><span class="tt">' + esc(p.t) + '</span></div>';
+              '<span class="tm">' + (isNow ? T("TERAZ") + " " + hm(p.s) : hm(p.s) + "–" + hm(p.e)) + '</span><span class="tt">' + esc(ptitle(p)) + '</span></div>';
     }
     box.innerHTML = html;
     var sp = guideItems[guideSel];
-    $("guideDesc").innerHTML = "<b>" + esc(sp.t) + "</b>" + hm(sp.s) + "–" + hm(sp.e) + (sp.d ? " · " + esc(sp.d) : "");
+    $("guideDesc").innerHTML = "<b>" + esc(ptitle(sp)) + "</b>" + hm(sp.s) + "–" + hm(sp.e) + (sp.d ? " · " + esc(sp.d) : "");
   }
 
   // =====================================================================
-  //  ODTWARZANIE
+  //  ODTWARZANIE (przeglądarka: hls.js / <video>; Android: ExoPlayer)
   // =====================================================================
-  var dead = {}, playAuto = false, zapDir = 1, skipCount = 0, skipTimer = null, playTimer = null, hadPlayed = false, retries = 0;
-  var needUserPlay = false;
+  var dead = {}, playAuto = false, zapDir = 1, skipCount = 0, skipTimer = null, playTimer = null, slowTimer = null, hadPlayed = false, retries = 0;
+  var needUserPlay = false, playToken = 0;
+
+  function clearPlayTimers() { clearTimeout(skipTimer); clearTimeout(playTimer); clearTimeout(slowTimer); }
 
   function stopVideo() {
-    clearTimeout(skipTimer); clearTimeout(playTimer); loading.classList.add("hidden");
+    clearPlayTimers(); loading.classList.add("hidden"); playToken++;
+    if (NATIVE) { try { window.Android.stop(); } catch (e) {} }
     if (hls) { hls.destroy(); hls = null; }
     video.removeAttribute("src"); video.load();
   }
@@ -963,33 +1177,47 @@
   function play(idx, auto) {
     var ch = allChannels[idx]; if (!ch) return;
     hideMsg();
-    clearTimeout(skipTimer); clearTimeout(playTimer);
+    clearPlayTimers();
+    var token = ++playToken;
     playAuto = !!auto; hadPlayed = false; retries = 0;
     if (!auto) skipCount = 0;
     loading.classList.remove("hidden");
-    playTimer = setTimeout(function () { if (!hadPlayed) onPlayFail("Kanał nie odpowiada."); }, PLAY_TIMEOUT_MS);
+    slowTimer = setTimeout(function () { if (token === playToken && !hadPlayed) showToast(T("Kanał długo się ładuje…")); }, SLOW_HINT_MS);
+    playTimer = setTimeout(function () { if (token === playToken && !hadPlayed) onPlayFail(T("Kanał nie odpowiada."), false); }, PLAY_TIMEOUT_MS);
     if (idx !== current) { previous = current; current = idx; }
     store(S_LAST, ch.url);
     if (hls) { hls.destroy(); hls = null; }
-    video.removeAttribute("src"); video.load();
 
+    if (NATIVE) {
+      try { window.Android.play(ch.url, BUFFER_OPTS[bufferIdx].len); } catch (e) { onPlayFail(T("Nie można odtworzyć kanału (format nieobsługiwany lub offline)."), true); }
+      if (screen === "watch") showBanner();
+      return;
+    }
+
+    video.removeAttribute("src"); video.load();
     var isHls = ch.url.toLowerCase().indexOf("m3u8") > -1;
     if (isHls && window.Hls && Hls.isSupported()) {
       var buf = BUFFER_OPTS[bufferIdx];
-      hls = new Hls({ enableWorker: true, maxBufferLength: buf.len, maxMaxBufferLength: buf.max, backBufferLength: 30 });
+      hls = new Hls({
+        enableWorker: true,
+        maxBufferLength: buf.len, maxMaxBufferLength: buf.max, backBufferLength: 30,
+        capLevelToPlayerSize: true,        // nie pobieraj 4K, gdy ekran ma Full HD
+        startFragPrefetch: true,           // szybszy start
+        manifestLoadingTimeOut: 15000, fragLoadingTimeOut: 30000
+      });
       hls.loadSource(ch.url);
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, function () { tryPlay(); });
       hls.on(Hls.Events.ERROR, function (e, d) {
-        if (!d.fatal) return;
+        if (!d.fatal || token !== playToken) return;
         if (d.type === Hls.ErrorTypes.MEDIA_ERROR) { hls.recoverMediaError(); return; }
         if (d.type === Hls.ErrorTypes.NETWORK_ERROR && hadPlayed && retries < 3) {
-          retries++; showToast("Utracono połączenie – ponawiam (" + retries + "/3)…");
+          retries++; showToast(T("Utracono połączenie – ponawiam ({n}/3)…", { n: retries }));
           loading.classList.remove("hidden");
-          setTimeout(function () { if (hls) hls.startLoad(); }, 2000);
+          setTimeout(function () { if (hls && token === playToken) hls.startLoad(); }, 2000);
           return;
         }
-        onPlayFail("Nie można odtworzyć kanału.<br>Strumień może być offline albo blokuje dostęp.");
+        onPlayFail(T("Nie można odtworzyć kanału.<br>Strumień może być offline albo blokuje dostęp."), true);
       });
     } else {
       video.src = ch.url;
@@ -997,23 +1225,33 @@
     }
     if (screen === "watch") showBanner();
   }
-  video.addEventListener("error", function () { if (!hls && video.getAttribute("src")) onPlayFail("Nie można odtworzyć kanału (format nieobsługiwany lub offline)."); });
-  video.addEventListener("playing", function () {
-    hadPlayed = true; retries = 0; skipCount = 0; clearTimeout(playTimer); loading.classList.add("hidden");
-    var c = allChannels[current]; if (c && dead[c.url]) { delete dead[c.url]; }
-  });
-  video.addEventListener("waiting", function () { if (hadPlayed) loading.classList.remove("hidden"); });
+  function markPlaying() {
+    hadPlayed = true; retries = 0; skipCount = 0; clearPlayTimers(); loading.classList.add("hidden");
+    var c = allChannels[current]; if (c && dead[c.url]) { delete dead[c.url]; if (screen === "playlist") renderList(); }
+  }
+  video.addEventListener("error", function () { if (!NATIVE && !hls && video.getAttribute("src")) onPlayFail(T("Nie można odtworzyć kanału (format nieobsługiwany lub offline)."), true); });
+  video.addEventListener("playing", function () { if (!NATIVE) markPlaying(); });
+  video.addEventListener("waiting", function () { if (!NATIVE && hadPlayed) loading.classList.remove("hidden"); });
 
-  function onPlayFail(text) {
-    clearTimeout(playTimer); loading.classList.add("hidden");
-    var c = allChannels[current]; if (c) dead[c.url] = true;
-    if (playAuto && SKIP_OPTS[skipIdx].id === "on" && skipCount < MAX_SKIPS && allChannels.length > 1 && screen === "watch") {
+  // zdarzenia ze sprzętowego odtwarzacza Androida
+  window.nativePlayer = function (ev, info) {
+    if (ev === "playing") markPlaying();
+    else if (ev === "buffering") { if (hadPlayed) loading.classList.remove("hidden"); }
+    else if (ev === "retry") { loading.classList.remove("hidden"); showToast(T("Utracono połączenie – ponawiam ({n}/3)…", { n: info })); }
+    else if (ev === "error") onPlayFail(T("Nie można odtworzyć kanału.<br>Strumień może być offline albo blokuje dostęp.") + (info ? "<br><small>" + esc(info) + "</small>" : ""), true);
+  };
+
+  // hard = prawdziwy błąd strumienia (wtedy można przeskoczyć); timeout = tylko komunikat
+  function onPlayFail(text, hard) {
+    clearPlayTimers(); loading.classList.add("hidden");
+    var c = allChannels[current]; if (c && hard) dead[c.url] = true;
+    if (hard && playAuto && SKIP_OPTS[skipIdx].id === "on" && skipCount < MAX_SKIPS && allChannels.length > 1 && screen === "watch") {
       skipCount++;
-      showToast((c ? c.name : "Kanał") + " nie działa – przełączam…");
+      showToast(T("{name} nie działa – przełączam…", { name: c ? c.name : T("Kanał") }));
       clearTimeout(skipTimer);
       skipTimer = setTimeout(function () { zap(zapDir); }, 1200);
     } else {
-      showMsg(text + (skipCount >= MAX_SKIPS ? "<br><small>Wiele kanałów z rzędu nie działa – sprawdź internet lub playlistę.</small>" : ""));
+      showMsg(text + (skipCount >= MAX_SKIPS ? "<br><small>" + esc(T("Wiele kanałów z rzędu nie działa – sprawdź internet lub playlistę.")) + "</small>" : ""));
       skipCount = 0;
     }
     if (screen === "playlist") renderList();
@@ -1022,13 +1260,18 @@
     needUserPlay = false;
     var p = video.play();
     if (p && p.catch) p.catch(function (err) {
-      if (err && err.name === "NotAllowedError") { needUserPlay = true; loading.classList.add("hidden"); clearTimeout(playTimer); showMsg("Dotknij ekranu albo naciśnij OK, aby włączyć obraz"); }
+      if (err && err.name === "NotAllowedError") { needUserPlay = true; loading.classList.add("hidden"); clearPlayTimers(); showMsg(T("Dotknij ekranu albo naciśnij OK, aby włączyć obraz")); }
     });
   }
+  // ▲▼ przełączają w obrębie listy, z której wybrano kanał (grupa / ulubione / wyniki), w kolejności z listy
   function zap(d) {
     if (!allChannels.length) return;
     zapDir = d;
-    play((Math.max(current, 0) + d + allChannels.length) % allChannels.length, true);
+    var list = zapList && zapList.length ? zapList : allChannels;
+    var pos = list.indexOf(allChannels[current]);
+    if (pos < 0) { list = allChannels; pos = Math.max(current, 0); }
+    var next = list[(pos + d + list.length) % list.length];
+    play(allChannels.indexOf(next), true);
   }
 
   // =====================================================================
@@ -1040,10 +1283,10 @@
     $("bNum").textContent = c.num;
     var lg = $("bLogo"); if (c.logo) { lg.src = c.logo; lg.style.display = ""; } else lg.style.display = "none";
     $("bName").textContent = c.name;
-    $("bNow").innerHTML = nn.cur ? '<span class="tm">' + hm(nn.cur.s) + "–" + hm(nn.cur.e) + "</span>" + esc(nn.cur.t) : '<span style="color:#9fb3c8">' + esc(c.group) + "</span>";
+    $("bNow").innerHTML = nn.cur ? '<span class="tm">' + hm(nn.cur.s) + "–" + hm(nn.cur.e) + "</span>" + esc(ptitle(nn.cur)) : '<span style="color:#9fb3c8">' + esc(groupLabel(c.group)) + "</span>";
     $("bBar").style.width = nn.cur ? pct(nn.cur) + "%" : "0";
     $("bBar").parentNode.style.visibility = nn.cur ? "" : "hidden";
-    $("bNext").textContent = nn.next ? "Następnie: " + hm(nn.next.s) + "  " + nn.next.t : "";
+    $("bNext").textContent = nn.next ? T("Następnie: {time}  {title}", { time: hm(nn.next.s), title: ptitle(nn.next) }) : "";
     $("bFav").textContent = isFav(c) ? "★" : "";
   }
   function showBanner() {
@@ -1065,13 +1308,15 @@
   }
 
   function typeDigit(d) {
-    if (numBuf.length >= 4) numBuf = "";
+    if (numBuf.length >= 5) numBuf = "";
     numBuf += d; numInput.textContent = numBuf; numInput.classList.remove("hidden");
     clearTimeout(numTimer);
     numTimer = setTimeout(function () {
       var n = parseInt(numBuf, 10); numBuf = ""; numInput.classList.add("hidden");
-      if (n >= 1 && n <= allChannels.length) { setScreen("watch"); play(n - 1); }
-      else showToast("Brak kanału nr " + n);
+      var idx = -1;
+      for (var i = 0; i < allChannels.length; i++) if (allChannels[i].num === n) { idx = i; break; }
+      if (idx > -1) { zapList = null; setScreen("watch"); play(idx); }
+      else showToast(T("Brak kanału nr {n}", { n: n }));
     }, 1500);
   }
 
@@ -1090,35 +1335,41 @@
     start:  '<path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3"/>',
     skip:   '<path d="M5 5v14l9-7zM18 5v14"/>',
     sort:   '<path d="M4 6h10M4 12h7M4 18h4M17 4v16m0 0-3-3m3 3 3-3"/>',
+    lang:   '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
     home:   '<path d="m3 11 9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
     info:   '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v.1"/>',
     close:  '<path d="m6 6 12 12M18 6 6 18"/>'
   };
   var MENU = [
     { label: "Lista kanałów", icon: ICON.list, run: function () { setScreen("playlist"); } },
-    { label: "Grupy kanałów", icon: ICON.groups, val: function () { return groups.length - 1 + ""; }, run: function () { openGroups(); } },
+    { label: "Grupy kanałów", icon: ICON.groups, val: function () { return String(Math.max(0, groups.length - 1)); }, run: function () { openGroups(); } },
     { label: "Szukaj kanału", icon: ICON.search, run: function () { openSearch(); } },
-    { label: "Program TV (EPG)", icon: ICON.epg, val: function () { return epgLoading ? "wczytywanie…" : epgCount ? epgCount + " kan." : "brak"; },
+    { label: "Program TV (EPG)", icon: ICON.epg, val: function () { return epgLoading ? T("wczytywanie…") : epgCount ? T("{n} kan.", { n: epgCount }) : T("brak"); },
       run: function () { openGuide(allChannels[current], "watch"); } },
     { label: function () { return isFav(allChannels[current]) ? "Usuń z ulubionych" : "Dodaj do ulubionych"; }, icon: ICON.star,
       val: function () { return favs.length ? "★ " + favs.length : ""; }, run: function () { toggleFav(allChannels[current]); } },
-    { label: "Poprzedni kanał", icon: ICON.back, run: function () { if (previous > -1) { setScreen("watch"); play(previous); } else showToast("Brak poprzedniego kanału"); } },
-    { label: "Odśwież playlistę", icon: ICON.reload, val: function () { return "ost. akt.: " + lastUpdate(activePl()); },
-      run: function () { var p = activePl(); if (p) { fetchPlaylist(p, true); epg = {}; } } },
-    { label: "Rozmiar bufora", icon: ICON.buffer, option: true, val: function () { return BUFFER_OPTS[bufferIdx].label; },
+    { label: "Poprzedni kanał", icon: ICON.back, run: function () { if (previous > -1) { setScreen("watch"); play(previous); } else showToast(T("Brak poprzedniego kanału")); } },
+    { label: "Odśwież playlistę", icon: ICON.reload, val: function () { return T("ost. akt.: {date}", { date: lastUpdate(activePl()) }); },
+      run: function () { var p = activePl(); if (p) fetchPlaylist(p, true); } },
+    { label: "Rozmiar bufora", icon: ICON.buffer, option: true, val: function () { return T(BUFFER_OPTS[bufferIdx].label); },
       change: function (d) { bufferIdx = (bufferIdx + d + BUFFER_OPTS.length) % BUFFER_OPTS.length; store(S_BUFFER, BUFFER_OPTS[bufferIdx].id);
         if (current > -1) { var c = current, p = previous; current = -1; play(c); previous = p; } } },
-    { label: "Odśwież przy starcie", icon: ICON.start, option: true, val: function () { return RELOAD_OPTS[reloadIdx].label; },
+    { label: "Odśwież przy starcie", icon: ICON.start, option: true, val: function () { return T(RELOAD_OPTS[reloadIdx].label); },
       change: function (d) { reloadIdx = (reloadIdx + d + RELOAD_OPTS.length) % RELOAD_OPTS.length; store(S_RELOAD, RELOAD_OPTS[reloadIdx].id); } },
-    { label: "Pomijaj niedziałające", icon: ICON.skip, option: true, val: function () { return SKIP_OPTS[skipIdx].label; },
+    { label: "Pomijaj niedziałające", icon: ICON.skip, option: true, val: function () { return T(SKIP_OPTS[skipIdx].label); },
       change: function (d) { skipIdx = (skipIdx + d + SKIP_OPTS.length) % SKIP_OPTS.length; store(S_SKIP, SKIP_OPTS[skipIdx].id); } },
-    { label: "Sortowanie listy", icon: ICON.sort, option: true, val: function () { return SORT_OPTS[sortIdx].label; },
+    { label: "Sortowanie listy", icon: ICON.sort, option: true, val: function () { return T(SORT_OPTS[sortIdx].label); },
       change: function (d) { sortIdx = (sortIdx + d + SORT_OPTS.length) % SORT_OPTS.length; store(S_SORT, SORT_OPTS[sortIdx].id); applyGroup(); } },
+    { label: "Język", icon: ICON.lang, option: true, val: function () { for (var i = 0; i < LANGS.length; i++) if (LANGS[i].id === lang) return LANGS[i].label; return lang; },
+      change: function (d) { var i = 0; for (; i < LANGS.length; i++) if (LANGS[i].id === lang) break; setLang(LANGS[(i + d + LANGS.length) % LANGS.length].id); } },
     { label: "Playlisty (ekran startowy)", icon: ICON.home, val: function () { var p = activePl(); return p ? p.name : ""; }, run: function () { showHome(); } },
     { label: "Informacje o kanale", icon: ICON.info, run: function () {
         var c = allChannels[current], p = activePl(); setScreen("watch");
-        if (c) showMsg("<b>" + esc(c.num + ". " + c.name) + "</b><br>Grupa: " + esc(c.group) + "<br>Playlista: " + esc(p ? p.name : "") +
-                       " (" + lastUpdate(p) + ")<br>Bufor: " + esc(BUFFER_OPTS[bufferIdx].label) + "<br><small>" + esc(c.url) + "</small>");
+        if (c) showMsg("<b>" + esc(c.num + ". " + c.name) + "</b><br>" + esc(T("Grupa")) + ": " + esc(groupLabel(c.group)) +
+                       "<br>" + esc(T("Playlista")) + ": " + esc(p ? p.name : "") + " (" + esc(lastUpdate(p)) + ")" +
+                       "<br>" + esc(T("Bufor")) + ": " + esc(T(BUFFER_OPTS[bufferIdx].label)) +
+                       "<br>" + esc(T("Odtwarzacz")) + ": " + esc(T(NATIVE ? "sprzętowy (ExoPlayer)" : "przeglądarki")) +
+                       "<br><small>" + esc(c.url) + "</small>");
       } },
     { label: "Zamknij menu", icon: ICON.close, run: function () { setScreen("watch"); } }
   ];
@@ -1126,34 +1377,38 @@
   function renderMenu() {
     var html = "";
     for (var i = 0; i < MENU.length; i++) {
-      var m = MENU[i];
+      var m = MENU[i], label = typeof m.label === "function" ? m.label() : m.label;
       html += '<div data-i="' + i + '" class="mi' + (i === menuSel ? " sel" : "") + '"><span class="mi-label">' + menuIcon(m.icon) + '<span>' +
-              (typeof m.label === "function" ? m.label() : m.label) + '</span></span><span class="val' + (m.option ? " opt" : "") + '">' + (m.val ? esc(m.val()) : "") + '</span></div>';
+              esc(T(label)) + '</span></span><span class="val' + (m.option ? " opt" : "") + '">' + (m.val ? esc(m.val()) : "") + '</span></div>';
     }
     $("menuItems").innerHTML = html;
   }
-  function menuActivate() { var m = MENU[menuSel]; if (m.option) { m.change(1); renderMenu(); } else m.run(); if (screen === "menu") renderMenu(); }
+  function menuActivate() { var m = MENU[menuSel]; if (m.option) m.change(1); else m.run(); if (screen === "menu") renderMenu(); }
 
   // =====================================================================
   //  EKRAN STARTOWY I DODAWANIE PLAYLIST
   // =====================================================================
-  var navFocus = null, addTab = "m3u", delArmed = null, delTimer = null;
+  var navFocus = null, addTab = "m3u", delArmed = null, delTimer = null, editing = false;
 
-  function showHome(message) {
+  function showHome(message, keepFocus) {
     stopVideo(); hideBanner();
     var html = "";
     pls.forEach(function (p) {
       html += '<div class="card nav" tabindex="-1" data-pl="' + esc(p.id) + '">' +
-              (p.id === activeId ? '<span class="badge">▶ ostatnio oglądana</span>' : '<span></span>') +
+              (p.id === activeId ? '<span class="badge">' + esc(T("▶ ostatnio oglądana")) + '</span>' : '<span></span>') +
               '<div class="t">' + esc(p.name) + '</div>' +
-              '<div class="s">' + (p.count ? p.count + " kanałów · " : "") + (p.type === "xtream" ? "Xtream" : "M3U") + '<br>akt.: ' + lastUpdate(p) + '</div></div>';
+              '<div class="s">' + (p.count ? esc(T("{n} kanałów", { n: p.count })) + " · " : "") + (p.type === "xtream" ? "Xtream" : "M3U") + '<br>' + esc(T("akt.: {date}", { date: lastUpdate(p) })) + '</div></div>';
     });
-    html += '<div class="card add nav" tabindex="-1" data-act="add"><div class="plus">＋</div><div class="s">Dodaj playlistę<br>(link M3U lub login Xtream)</div></div>';
+    html += '<div class="card add nav" tabindex="-1" data-act="add"><div class="plus">＋</div><div class="s">' + T("Dodaj playlistę<br>(link M3U lub login Xtream)") + '</div></div>';
     $("cards").innerHTML = html;
     $("homeMsg").textContent = message || "";
     setScreen("home");
-    var first = document.querySelector('#cards .card[data-pl="' + activeId + '"]') || document.querySelector("#cards .card");
-    setNav(first);
+    var target = null;
+    if (keepFocus && keepFocus.getAttribute) {
+      var lg = keepFocus.getAttribute("data-lang");
+      if (lg) target = document.querySelector('.lang[data-lang="' + lg + '"]');
+    }
+    setNav(target || document.querySelector('#cards .card[data-pl="' + activeId + '"]') || document.querySelector("#cards .card"));
   }
 
   function openAdd() {
@@ -1166,14 +1421,15 @@
     $("tabM3u").classList.toggle("hidden", t !== "m3u"); $("tabXtream").classList.toggle("hidden", t !== "xtream");
   }
   function saveAdd() {
+    stopEditing();
     var name = $("fName").value.trim(), p;
     if (addTab === "m3u") {
       var url = $("fUrl").value.trim();
-      if (!/^https?:\/\//i.test(url)) { $("addMsg").textContent = "Wpisz poprawny adres listy (zaczyna się od https://)."; setNav($("fUrl")); return; }
-      p = { id: newId(), type: "m3u", name: name || "Playlista " + (pls.length + 1), url: url, epg: $("fEpg").value.trim() };
+      if (!/^https?:\/\//i.test(url)) { $("addMsg").textContent = T("Wpisz poprawny adres listy (zaczyna się od http:// lub https://)."); setNav($("fUrl")); return; }
+      p = { id: newId(), type: "m3u", name: name || T("Playlista {n}", { n: pls.length + 1 }), url: url, epg: $("fEpg").value.trim() };
     } else {
       var server = $("fServer").value.trim(), user = $("fUser").value.trim(), pass = $("fPass").value;
-      if (!server || !user || !pass) { $("addMsg").textContent = "Uzupełnij serwer, login i hasło."; return; }
+      if (!server || !user || !pass) { $("addMsg").textContent = T("Uzupełnij serwer, login i hasło."); return; }
       p = { id: newId(), type: "xtream", name: name || "Xtream " + user, server: server, user: user, pass: pass };
     }
     pls.push(p); savePls();
@@ -1182,29 +1438,43 @@
   function addPreset(btn) {
     var url = btn.getAttribute("data-url"), p = null;
     for (var i = 0; i < pls.length; i++) if (pls[i].url === url) p = pls[i];
-    if (!p) { p = { id: newId(), type: "m3u", name: btn.getAttribute("data-name"), url: url }; pls.push(p); savePls(); }
+    if (!p) { p = { id: newId(), type: "m3u", name: btn.textContent.trim(), url: url }; pls.push(p); savePls(); }
     openPlaylist(p, false);
   }
   function deletePl(id) {
     var p = getPl(id); if (!p) return;
     if (delArmed !== id) {
       delArmed = id; clearTimeout(delTimer); delTimer = setTimeout(function () { delArmed = null; }, 3000);
-      showToast("Naciśnij czerwony jeszcze raz, aby usunąć „" + p.name + "”"); return;
+      showToast(T("Naciśnij czerwony jeszcze raz, aby usunąć „{name}”", { name: p.name })); return;
     }
     delArmed = null;
     pls = pls.filter(function (x) { return x.id !== id; });
     remove(cacheKey(id)); remove(updKey(id));
-    if (activeId === id) { activeId = pls.length ? pls[0].id : null; allChannels = []; current = -1; if (!activeId) remove(S_ACTIVE); }
-    savePls(); showToast("Usunięto playlistę „" + p.name + "”"); showHome();
+    if (activeId === id) { activeId = pls.length ? pls[0].id : null; allChannels = []; current = -1; epg = {}; epgCount = 0; epgFor = null; if (!activeId) remove(S_ACTIVE); }
+    savePls(); showToast(T("Usunięto playlistę „{name}”", { name: p.name })); showHome();
+  }
+
+  // --- pola tekstowe: OK otwiera klawiaturę ekranową, OK/▲▼ kończy pisanie ---
+  function startEditing(el) {
+    editing = true; el.classList.add("editing");
+    try { el.focus(); } catch (e) {}
+    if (window.Android && window.Android.showKeyboard) { try { window.Android.showKeyboard(); } catch (e) {} }
+  }
+  function stopEditing() {
+    if (!editing) return;
+    editing = false;
+    document.querySelectorAll("input.editing").forEach(function (x) { x.classList.remove("editing"); });
+    if (window.Android && window.Android.hideKeyboard) { try { window.Android.hideKeyboard(); } catch (e) {} }
   }
 
   // --- nawigacja strzałkami po elementach ekranu (karty, pola, przyciski) ---
   function navContainer() { return screen === "home" ? $("home") : screen === "add" ? $("add") : screen === "search" ? $("searchBox") : null; }
   function setNav(el) {
+    stopEditing();
     document.querySelectorAll(".nav.focus").forEach(function (x) { x.classList.remove("focus"); });
     navFocus = el; if (!el) return;
     el.classList.add("focus");
-    try { el.focus(); } catch (e) {}
+    try { el.focus({ preventScroll: true }); } catch (e) { try { el.focus(); } catch (e2) {} }
   }
   function moveNav(dir) {
     var box = navContainer(); if (!box) return;
@@ -1214,12 +1484,12 @@
     els.forEach(function (e) {
       if (e === navFocus) return;
       var r = e.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2, dx = x - cx, dy = y - cy, main, side;
-      var lx = Math.abs(r.left - r0.left);   // przy ruchu góra/dół liczy się wyrównanie do lewej krawędzi
+      var lx = Math.abs(r.left - r0.left);
       if (dir === "left")  { if (dx > -5) return; main = -dx; side = Math.abs(dy); }
       if (dir === "right") { if (dx < 5) return;  main = dx;  side = Math.abs(dy); }
       if (dir === "up")    { if (dy > -5) return; main = -dy; side = Math.min(lx, Math.abs(dx)); }
       if (dir === "down")  { if (dy < 5) return;  main = dy;  side = Math.min(lx, Math.abs(dx)); }
-      var score = main + side * 2.5;
+      var score = (dir === "up" || dir === "down") ? main * 3 + side * 0.6 : main + side * 2.5;   // pion: najpierw najbliższy rząd
       if (score < bestScore) { bestScore = score; best = e; }
     });
     if (best) setNav(best);
@@ -1227,6 +1497,8 @@
   function activateNav(el) {
     if (!el) return;
     if (el.tagName === "INPUT") {
+      if (!editing) { startEditing(el); return; }
+      stopEditing();
       if (screen === "search") { applySearch(); return; }
       moveNav("down"); return;
     }
@@ -1240,16 +1512,24 @@
     var p = getPl(c.getAttribute("data-pl")); if (p) openPlaylist(p, false);
   });
   document.querySelectorAll(".chip").forEach(function (b) { b.addEventListener("click", function () { addPreset(b); }); });
+  document.querySelectorAll(".lang").forEach(function (b) { b.addEventListener("click", function () { setLang(b.getAttribute("data-lang")); setNav(b); }); });
   document.querySelectorAll(".tab").forEach(function (b) { b.addEventListener("click", function () { setTab(b.getAttribute("data-tab")); setNav(b); }); });
   $("addSave").addEventListener("click", saveAdd);
-  $("addCancel").addEventListener("click", function () { showHome(); });
+  $("addCancel").addEventListener("click", function () { stopEditing(); showHome(); });
+  document.querySelectorAll("input").forEach(function (inp) {
+    inp.addEventListener("focus", function () { if (navFocus !== inp) { document.querySelectorAll(".nav.focus").forEach(function (x) { x.classList.remove("focus"); }); navFocus = inp; inp.classList.add("focus"); } });
+  });
 
   // --- szukanie ---
   var searchFrom = "watch";
-  function openSearch() { searchFrom = screen === "menu" || screen === "groups" ? "playlist" : screen; $("searchInput").value = searchQuery; setScreen("search"); setNav($("searchInput")); }
+  function openSearch() {
+    searchFrom = (screen === "menu" || screen === "groups" || screen === "search") ? "playlist" : screen;
+    $("searchInput").value = searchQuery; setScreen("search"); setNav($("searchInput")); startEditing($("searchInput"));
+  }
   function applySearch() {
+    stopEditing();
     searchQuery = $("searchInput").value.trim();
-    $("searchInput").blur();
+    try { $("searchInput").blur(); } catch (e) {}
     applyGroup(); setScreen("playlist");
   }
 
@@ -1257,11 +1537,12 @@
   //  PRZEŁĄCZANIE EKRANÓW
   // =====================================================================
   function setScreen(s) {
+    if (s !== screen) stopEditing();
     screen = s;
     ["splash", "home", "add", "playlist", "groups", "guide", "menu", "searchBox"].forEach(function (id) {
       $(id).classList.toggle("hidden", id !== s && !(id === "searchBox" && s === "search"));
     });
-    if (s !== "search" && document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    if (s !== "search" && s !== "add" && s !== "home" && document.activeElement && document.activeElement.blur) document.activeElement.blur();
     if (s === "playlist") { hideMsg(); hideBanner(); applyGroupKeepSel(); }
     if (s === "groups") { hideBanner(); renderGroups(); }
     if (s === "guide") hideBanner();
@@ -1288,6 +1569,7 @@
     else if (screen === "playlist") {
       var ch = filtered[sel]; if (!ch) return;
       var idx = allChannels.indexOf(ch);
+      zapList = filtered.slice();              // ▲▼ będą przełączać w tej samej grupie i kolejności
       if (idx === current && hadPlayed) setScreen("watch");
       else { setScreen("watch"); play(idx); }
     }
@@ -1313,39 +1595,42 @@
   function tryExitApp() {
     if (!(window.Android && window.Android.exitApp)) return false;
     if (exitArmed) { window.Android.exitApp(); return true; }
-    exitArmed = true; showToast("Naciśnij Wstecz jeszcze raz, aby zamknąć aplikację");
+    exitArmed = true; showToast(T("Naciśnij Wstecz jeszcze raz, aby zamknąć aplikację"));
     clearTimeout(exitTimer); exitTimer = setTimeout(function () { exitArmed = false; }, 2500);
     return true;
   }
 
   function onKeyDown(e) {
-    var k = e.keyCode, ae = document.activeElement, inInput = ae && ae.tagName === "INPUT";
+    var k = e.keyCode, ae = document.activeElement, inInput = !!(ae && ae.tagName === "INPUT");
     if (!is(k, "BACK")) exitArmed = false;
-
-    // --- przycisk Menu: od razu menu aplikacji ---
-    if (is(k, "MENU") && !(k === 77 && inInput) && (screen === "watch" || screen === "playlist" || screen === "groups" || screen === "guide")) {
-      setScreen("menu"); e.preventDefault(); return;
-    }
 
     // --- ekrany z formularzami: start, dodawanie, szukanie ---
     if (screen === "home" || screen === "add" || screen === "search") {
-      if (is(k, "BACK") && !(inInput && k === 8)) {
+      var typing = inInput && (editing || !NATIVE);          // w przeglądarce pole z kursorem przyjmuje litery zawsze
+      if (is(k, "BACK") && !(typing && k === 8)) {
         e.preventDefault();
+        if (editing) { stopEditing(); return; }
         if (screen === "add") showHome();
         else if (screen === "search") setScreen(searchFrom === "search" ? "watch" : searchFrom);
         else if (allChannels.length) { setScreen("watch"); play(Math.max(current, 0)); }
         else tryExitApp();
         return;
       }
-      if (is(k, "RED") && screen === "home" && navFocus && navFocus.getAttribute("data-pl") && k !== 82) { deletePl(navFocus.getAttribute("data-pl")); e.preventDefault(); return; }
-      if (k === 82 && screen === "home" && !inInput && navFocus && navFocus.getAttribute("data-pl")) { deletePl(navFocus.getAttribute("data-pl")); e.preventDefault(); return; }
+      if (typing && !is(k, "UP") && !is(k, "DOWN") && !is(k, "OK")) return;     // pisanie w polu, ◀▶ przesuwają kursor
+      if ((k === 403 || (k === 82 && !inInput)) && screen === "home" && navFocus && navFocus.getAttribute("data-pl")) { deletePl(navFocus.getAttribute("data-pl")); e.preventDefault(); return; }
       if (is(k, "UP")) { moveNav("up"); e.preventDefault(); }
       else if (is(k, "DOWN")) { moveNav("down"); e.preventDefault(); }
-      else if ((is(k, "LEFT") || is(k, "RIGHT")) && !inInput) { moveNav(is(k, "LEFT") ? "left" : "right"); e.preventDefault(); }
+      else if (is(k, "LEFT")) { moveNav("left"); e.preventDefault(); }
+      else if (is(k, "RIGHT")) { moveNav("right"); e.preventDefault(); }
       else if (is(k, "OK")) { activateNav(navFocus); e.preventDefault(); }
       return;
     }
     if (screen === "splash") { if (is(k, "BACK")) { showHome(); e.preventDefault(); } return; }
+
+    // --- przycisk Menu: od razu menu aplikacji ---
+    if (is(k, "MENU") && (screen === "watch" || screen === "playlist" || screen === "groups" || screen === "guide")) {
+      setScreen("menu"); e.preventDefault(); return;
+    }
 
     // --- OK: krótkie / długie ---
     if (is(k, "OK")) {
@@ -1356,7 +1641,7 @@
       return;
     }
 
-    // --- kolorowe przyciski ---
+    // --- kolorowe przyciski i cyfry ---
     if (screen === "watch" || screen === "playlist") {
       var act = is(k, "RED") ? "fav" : is(k, "GREEN") ? "epg" : is(k, "YELLOW") ? "az" : is(k, "BLUE") ? "groups" : is(k, "INFO") ? "info" : null;
       if (act) { colorKey(act); e.preventDefault(); return; }
@@ -1375,29 +1660,30 @@
       else handled = false;
     }
     else if (screen === "playlist") {
-      if (is(k, "UP")) { sel = (sel - 1 + filtered.length) % Math.max(1, filtered.length); renderList(); }
-      else if (is(k, "DOWN")) { sel = (sel + 1) % Math.max(1, filtered.length); renderList(); }
+      var n = Math.max(1, filtered.length);
+      if (is(k, "UP")) { sel = (sel - 1 + n) % n; renderList(); }
+      else if (is(k, "DOWN")) { sel = (sel + 1) % n; renderList(); }
       else if (is(k, "CH_UP")) { sel = Math.max(0, sel - 10); renderList(); }
       else if (is(k, "CH_DOWN")) { sel = Math.min(filtered.length - 1, sel + 10); renderList(); }
-      else if (is(k, "LEFT") || is(k, "RIGHT")) {
-        searchQuery = ""; groupIdx = (groupIdx + (is(k, "LEFT") ? -1 : 1) + groups.length) % groups.length; applyGroup();
-      }
+      else if (is(k, "LEFT")) openGroups();                                  // ◀ panel grup (jak w TiviMate)
+      else if (is(k, "RIGHT")) openGuide(filtered[sel], "playlist");         // ▶ program TV kanału
       else if (is(k, "BACK")) { if (searchQuery) { searchQuery = ""; applyGroup(); } else setScreen("watch"); }
       else handled = false;
     }
     else if (screen === "groups") {
-      var n = groups.length + 1;
-      if (is(k, "UP")) { groupSel = (groupSel - 1 + n) % n; renderGroups(); }
-      else if (is(k, "DOWN")) { groupSel = (groupSel + 1) % n; renderGroups(); }
+      var gn = groups.length + 1;
+      if (is(k, "UP")) { groupSel = (groupSel - 1 + gn) % gn; renderGroups(); }
+      else if (is(k, "DOWN")) { groupSel = (groupSel + 1) % gn; renderGroups(); }
       else if (is(k, "CH_UP")) { groupSel = Math.max(0, groupSel - 10); renderGroups(); }
-      else if (is(k, "CH_DOWN")) { groupSel = Math.min(n - 1, groupSel + 10); renderGroups(); }
-      else if (is(k, "BACK") || is(k, "BLUE")) setScreen("playlist");
+      else if (is(k, "CH_DOWN")) { groupSel = Math.min(gn - 1, groupSel + 10); renderGroups(); }
+      else if (is(k, "RIGHT")) chooseGroup(groupSel);
+      else if (is(k, "BACK") || is(k, "BLUE") || is(k, "LEFT")) setScreen("playlist");
       else handled = false;
     }
     else if (screen === "guide") {
       if (is(k, "UP")) { guideSel = Math.max(0, guideSel - 1); renderGuide(); }
       else if (is(k, "DOWN")) { guideSel = Math.min(Math.max(0, guideItems.length - 1), guideSel + 1); renderGuide(); }
-      else if (is(k, "BACK") || is(k, "GREEN") || is(k, "INFO")) setScreen(guideFrom);
+      else if (is(k, "BACK") || is(k, "GREEN") || is(k, "INFO") || is(k, "LEFT")) setScreen(guideFrom);
       else handled = false;
     }
     else if (screen === "menu") {
@@ -1419,24 +1705,23 @@
   }
   document.addEventListener("keydown", onKeyDown);
   document.addEventListener("keyup", onKeyUp);
+  window.addEventListener("blur", function () { clearTimeout(okTimer); okDown = false; });
 
-  // --- most dla aplikacji Android: przyciski pilota, których WebView sam nie przekazuje (Wstecz, kolory, CH, Info, Menu) ---
+  // most dla aplikacji Android: przyciski, których WebView sam nie przekazuje (Wstecz, kolory, CH, Info, Menu)
   window.tvKey = function (type, code) {
     var ev = { keyCode: code, preventDefault: function () {}, stopPropagation: function () {} };
     if (type === "keyup") onKeyUp(ev); else onKeyDown(ev);
   };
 
-  // --- dopasowanie obrazu 1920×1080 do ekranów o innych proporcjach (telefony, tablety) ---
+  // dopasowanie obrazu 1920×1080 do ekranów o innych proporcjach (telefony, tablety, okno przeglądarki)
   function fitScreen() {
     var w = window.innerWidth, h = window.innerHeight, sc = Math.min(w / 1920, h / 1080), b = document.body.style;
-    if (Math.abs(w / h - 16 / 9) < 0.02 && Math.abs(sc - w / 1920) < 0.01 && Math.abs(w - 1920) < 2) { b.transform = ""; b.position = ""; b.left = ""; b.top = ""; return; }
+    if (Math.abs(w - 1920) < 2 && Math.abs(h - 1080) < 2) { b.transform = ""; b.position = ""; b.left = ""; b.top = ""; return; }
     b.position = "absolute"; b.transformOrigin = "0 0";
     b.left = Math.round((w - 1920 * sc) / 2) + "px"; b.top = Math.round((h - 1080 * sc) / 2) + "px";
     b.transform = "scale(" + sc + ")";
   }
   window.addEventListener("resize", fitScreen);
-  fitScreen();
-  window.addEventListener("blur", function () { clearTimeout(okTimer); okDown = false; });
 
   // =====================================================================
   //  DOTYK I MYSZ (telefon / komputer)
@@ -1470,6 +1755,7 @@
   }
   function tap(t) {
     var el;
+    if (!t || !t.closest) return;
     if (screen === "watch") { onOkShort(); return; }
     if (screen === "playlist") {
       if ((el = t.closest(".ch"))) { sel = parseInt(el.getAttribute("data-i"), 10); onOkShort(); }
@@ -1487,11 +1773,16 @@
       else if (!t.closest("#menuBox")) setScreen("watch");
     }
   }
-  $("searchInput").addEventListener("keydown", function (e) { if (e.keyCode === 13) { e.preventDefault(); e.stopPropagation(); applySearch(); } });
+  $("searchInput").addEventListener("keydown", function (e) {
+    if (e.keyCode === 13) { e.preventDefault(); e.stopPropagation(); applySearch(); }
+  });
 
   // =====================================================================
   //  START
   // =====================================================================
+  applyStaticTexts();
+  $("splashText").textContent = T("Uruchamianie…");
+  fitScreen();
   updateClock(); setInterval(updateClock, 30000);
   var startPl = activePl();
   if (startPl) openPlaylist(startPl, false);
